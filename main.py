@@ -6,26 +6,25 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
-# CSV 파일 경로 설정 (실제 파일 경로로 수정 필요)
+# CSV
 csv_path = 'data.csv'
 
-# CSV 파일 로드
+# CSV file lode
 df = pd.read_csv(csv_path)
 df['Date'] = pd.to_datetime(df['Date'])
 df.set_index('Date', inplace=True)
 
-# 데이터 시각화
+# data
 df['PowerGeneration'].plot(figsize=(12, 6))
 plt.title('Power Generation Over Time')
 plt.xlabel('Date')
 plt.ylabel('Power Generation')
 plt.show()
 
-# 데이터 정규화
 scaler = MinMaxScaler()
 scaled_data = scaler.fit_transform(df['PowerGeneration'].values.reshape(-1, 1))
 
-# 데이터셋 생성
+# create data set
 def create_dataset(data, time_steps=1):
     x, y = [], []
     for i in range(len(data) - time_steps):
@@ -36,16 +35,15 @@ def create_dataset(data, time_steps=1):
 time_steps = 10  # 시계열의 타임 스텝 수
 X, y = create_dataset(scaled_data, time_steps)
 
-# 훈련 및 테스트 데이터셋 분할
+# train
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 모델 구축
+# model
 model = Sequential()
 model.add(LSTM(units=50, activation='relu', input_shape=(X_train.shape[1], 1)))
 model.add(Dense(units=1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# 모델 훈련
 model.fit(X_train, y_train, epochs=50, batch_size=32)
 
 # 테스트 데이터에 대한 예측
