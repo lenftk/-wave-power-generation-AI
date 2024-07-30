@@ -32,7 +32,7 @@ def create_dataset(data, time_steps=1):
         y.append(data[i + time_steps, 0])
     return np.array(x), np.array(y)
 
-time_steps = 10  # 시계열의 타임 스텝 수
+time_steps = 10  
 X, y = create_dataset(scaled_data, time_steps)
 
 # train
@@ -46,10 +46,9 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 
 model.fit(X_train, y_train, epochs=50, batch_size=32)
 
-# 테스트 데이터에 대한 예측
 y_pred = model.predict(X_test)
 
-# 예측 결과 시각화
+
 plt.figure(figsize=(12, 6))
 plt.plot(y_test, label='Actual Power Generation')
 plt.plot(y_pred, label='Predicted Power Generation')
